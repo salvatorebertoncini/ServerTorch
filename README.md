@@ -1,6 +1,4 @@
 # ServerTorch
-Django (Python) Server for SpyTorch Android spyware
-
 Django powered Server, for accept and process:
 
 - [SpyTorch](https://github.com/salvobertoncini/SpyTorch) Android request
