@@ -1,13 +1,13 @@
-from mongoengine import *
+from pymongo import MongoClient
 
-DBNAME = 'ServerTorch'
+DBNAME = 'SpyTorch'
 DBHOST = 'localhost'
 DBPORT = 27017
 DBUSERNAME = ''
 DBPASSWORD = ''
 
-def connect():
-    connect(DBNAME, host=DBHOST, port=DBPORT)
+def connectMongoDB():
+    return MongoClient(DBHOST, DBPORT)
 
-def close():
-    connection.close()
+def closeMongoDB(self):
+    self.close()
