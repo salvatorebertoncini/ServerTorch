@@ -11,7 +11,9 @@ def index(request):
     if request.method == "POST":
         data = json.loads(request.body)
         return HttpResponse("foo: %s, " % str(data["foo"]) + "bar: %s" % str(data["bar"]))
+
     elif request.method == "GET":
-        return HttpResponse("GET Request with foo: " + request.GET.get('foo', '') + ' and bar: ' +request.GET.get('bar', ''))
+        return HttpResponse("GET Request with foo: " + request.GET.get('foo', '') + ' and bar: ' + request.GET.get('bar', ''))
+
     else:
         return HttpResponse("Anything else response")
