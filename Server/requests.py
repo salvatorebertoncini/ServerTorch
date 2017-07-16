@@ -7,8 +7,7 @@ from database import *
 
 def responseTest(data):
     client = connectMongoDB()
-    db = client[DBNAME]
-    collection = db.aggregate
+    collection = selectCollectionMongoDB(client)
 
     data["date"] = datetime.datetime.now()
 

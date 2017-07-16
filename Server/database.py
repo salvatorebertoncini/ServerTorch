@@ -10,6 +10,7 @@ db.aggregate.find() per vedere tutto
 """
 
 DBNAME = 'SpyTorch'
+DBCOLLECTION = 'aggregate'
 DBHOST = 'localhost'
 DBPORT = 32768
 DBUSERNAME = ''
@@ -17,6 +18,10 @@ DBPASSWORD = ''
 
 def connectMongoDB():
     return MongoClient(DBHOST, DBPORT)
+
+def selectCollectionMongoDB(client):
+    db = client[DBNAME]
+    return db[DBCOLLECTION]
 
 def closeMongoDB(client):
     client.close()
