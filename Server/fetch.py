@@ -19,8 +19,12 @@ def fetchData(data):
     print "\ndate latest element: "+str(date)
     print "innested date element: "+str(inndate)+"\n"
 
+    #LambdaFetch with map function
+    lambdaf = map(lambda x: x["counter"]+1000, latest)
+    print "lambda function -> "+str(lambdaf)
+
     #Insert new results
-    latest = {"date": datetime.datetime.now(), "map" : data, "counter": counter+1}
+    latest = {"date": datetime.datetime.now(), "map" : data, "counter": counter+1, "flag": True}
 
     #Save fetched element
     result = insertElementMongoDB(collection, latest)
