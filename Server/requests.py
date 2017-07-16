@@ -11,7 +11,7 @@ def responseTest(data):
 
     data["date"] = datetime.datetime.now()
 
-    result = collection.insert_one(data)
+    result = insertElementMongoDB(collection, data)
     strReturn = 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
 
     closeMongoDB(client)
