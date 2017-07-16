@@ -21,13 +21,13 @@ def connectMongoDB():
     return MongoClient(DBHOST, DBPORT)
 
 
+def closeMongoDB(client):
+    client.close()
+
+
 def selectCollectionMongoDB(client):
     db = client[DBNAME]
     return db[DBCOLLECTION]
-
-
-def closeMongoDB(client):
-    client.close()
 
 
 def insertElementMongoDB(collection, data):
