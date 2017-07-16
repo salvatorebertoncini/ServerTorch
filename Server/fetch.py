@@ -5,24 +5,26 @@ from database import *
 
 def fetchData(data):
 
+    #MongoDB connection, selecting "datafetching" database
     client = connectMongoDB()
     collection = selectCollectionMongoDB(client, "datafetching")
 
-    #select latest element
+    #Select latest element
     latest = selectLatestNElementsMongoDB(collection, 1)
 
-    #fetch element example
+    #Fetch element example
     counter = latest[0]["counter"]
     date = latest[0]["date"]
     inndate = latest[0]["map"]["date"]
-    print "date latest element: "+str(date)+"\n"
+    print "\ndate latest element: "+str(date)
     print "innested date element: "+str(inndate)+"\n"
 
-    #insert new results
+    #Insert new results
     latest = {"date": datetime.datetime.now(), "map" : data, "counter": counter+1}
 
-    #save fetched element
+    #Save fetched element
     result = insertElementMongoDB(collection, latest)
-    print 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
+    print 'Successfully inserted, with ID: {0}'.format(result.inserted_id)+'\n'
 
+    #Closing connection
     closeMongoDB(client)
