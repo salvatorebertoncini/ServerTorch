@@ -25,17 +25,13 @@ def closeMongoDB(client):
     client.close()
 
 
-def selectCollectionMongoDB(client):
-    db = client[DBNAME]
+def selectCollectionMongoDB(client, dbname=DBNAME):
+    db = client[dbname]
     return db[DBCOLLECTION]
 
-def selectCollectionMongoDB(client, collection):
-    db = client[DBNAME]
-    return db[collection]
 
-
-def selectElementMongoDB(client):
-    return 1
+def selectLatestNElementsMongoDB(collection, N):
+    return list(collection.find().skip(collection.count() - N))
 
 
 def insertElementMongoDB(collection, data):
