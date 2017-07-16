@@ -7,23 +7,25 @@ from logs import saveLog
 #{ "date": "", "stats": {"BuildInfo": {"Manufacturer": [], "ManufacturerCounter": 0 }, "TelephoneInfo":  { "IMEIcounter": 0, "IMEIcollected": []} },"flag": true }
 
 
-def IMEIFetch(imei, imeiList, imeiCounter):
-    if imei not in imeiList:
-        imeiCounter += 1
-        imeiList.append(imei)
-    return imeiList, imeiCounter
+def ManufacturerFetch(device, imei, deviceList):
+
+    dev = filter(lambda x: x["Brand"] == device, deviceList["device"])
+    print dev
+
+    if not dev:
+        counter = 1
+        deviceList["device"].append({"IMEI": [imei], "Brand": device, "counter": counter})
+    else:
+        map(lambda x: [x["IMEI"].append(imei), x["counter"] + 1], filter(lambda x: x["Brand"] == device, deviceList["device"]))
+
+    #deviceList["totalCounter"] += 1
+
+    return deviceList
 
 
-def ManufacturerFetch(device, deviceList, deviceCounter):
-    if device not in deviceList:
-        deviceList.append(device)
-        deviceCounter += 1
-    return deviceList, deviceCounter
-
-
-def DevicePercentage(device, deviceList, deviceCounter):
-    if device in deviceList:
-        return 1 / deviceCounter
+def DevicePercentage(device, deviceList):
+    if device in deviceList.keys():
+        return deviceList[device] / len(deviceList)
     else:
         return 0
 
@@ -36,22 +38,15 @@ def fetchData(data):
     #Select latest element
     latest = selectLatestNElementsMongoDB(collection, 1)
 
-    #Fetch IMEI
-    imeiList = latest[0]["stats"]["TelephoneInfo"]["IMEIcollected"]
-    imeiCounter = latest[0]["stats"]["TelephoneInfo"]["IMEIcounter"]
-    imeiList, imeiCounter = IMEIFetch(data["TelephoneInfo"]["IMEI"], imeiList, imeiCounter)
-
-
     #Fetch Manufacturer
-    deviceList = latest[0]["stats"]["BuildInfo"]["Manufacturer"]
-    deviceCounter = latest[0]["stats"]["BuildInfo"]["ManufacturerCounter"]
-    deviceList, deviceCounter = ManufacturerFetch(data["BuildInfo"]["Manufacturer"], deviceList, deviceCounter)
+    BuildInfoList = latest[0]["stats"]["BuildInfo"]["Manufacturer"]
+    BuildInfoList = ManufacturerFetch(data["BuildInfo"]["Manufacturer"], data["TelephoneInfo"]["IMEI"], BuildInfoList)
 
     #e.g. percentage of Samsung devices in the database
-    samsung = DevicePercentage("Samsung", deviceList, deviceCounter)
+    samsung = DevicePercentage("Samsung", BuildInfoList)
 
     #e.g. percentage of Apple devices in the database, LOL
-    apple = DevicePercentage("Apple Inc.", deviceList, deviceCounter)
+    apple = DevicePercentage("Apple Inc.", BuildInfoList)
 
     """   
     #LambdaFetch with map function
@@ -60,7 +55,7 @@ def fetchData(data):
     """
 
     #Insert new results
-    latest = { "date": datetime.datetime.now(), "stats": {"BuildInfo": {"Manufacturer": deviceList, "ManufacturerCounter": deviceCounter }, "TelephoneInfo":  {"IMEIcounter": imeiCounter, "IMEIcollected": imeiList} },"flag": True }
+    latest = { "date": datetime.datetime.now(), "stats": {"BuildInfo": {"Manufacturer": BuildInfoList}},"flag": True }
 
     #Save fetched element
     result = insertElementMongoDB(collection, latest)
