@@ -1,9 +1,9 @@
 ## fetch.py
  
-**[2017-07-16 16:53:10.379000]:** Successfully inserted with ID: 596b7dd6198adf09ec2a092b
-
+**[2017-07-16 20:33:52.721000]:** Successfully inserted with ID: 596bb190198adf0aa4be5115
+Percentuale dispositivi Samsung: 0.333333333333
  
 ## request.py
  
-**[2017-07-16 16:53:10.407000]:** Successfully inserted, with ID: 596b7dd6198adf09ec2a092c
+**[2017-07-16 20:33:52.757000]:** Successfully inserted, with ID: 596bb190198adf0aa4be5116
  
