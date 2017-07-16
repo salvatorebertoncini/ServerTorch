@@ -4,28 +4,22 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import datetime
 from pymongo import *
 from database import *
 
 
-"""
-per collegarsi al db:
-
-exec su kinect
-mongo
-use SpyTorch
-db.aggregate.find() per vedere tutto
-"""
-
 def responseTest(data):
-    client = MongoClient("localhost", 32775)
+    client = connectMongoDB()
     db = client.SpyTorch
+    #db = client.DBNAME
     collection = db.aggregate
 
+    data["date"] = datetime.datetime.now()
     result = collection.insert_one(data)
     strReturn = 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
 
-    client.close()
+    closeMongoDB(client)
 
     return strReturn
 

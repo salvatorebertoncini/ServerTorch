@@ -6,6 +6,6 @@ Django powered Server, for accept and process:
 
 Dependencies: 
 
-* [MongoEngine](http://mongoengine.org/)
+* [PyMongo](https://api.mongodb.com/python/current/)
 
  

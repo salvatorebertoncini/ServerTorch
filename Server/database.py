@@ -1,13 +1,22 @@
 from pymongo import MongoClient
 
+"""
+per collegarsi al db:
+
+exec su kinect
+mongo
+use SpyTorch
+db.aggregate.find() per vedere tutto
+"""
+
 DBNAME = 'SpyTorch'
 DBHOST = 'localhost'
-DBPORT = 27017
+DBPORT = 32768
 DBUSERNAME = ''
 DBPASSWORD = ''
 
 def connectMongoDB():
     return MongoClient(DBHOST, DBPORT)
 
-def closeMongoDB(self):
-    self.close()
+def closeMongoDB(client):
+    client.close()
