@@ -3,13 +3,18 @@ import json
 import datetime
 
 from database import *
+from fetch import fetchData
 
 
 def responseTest(data):
     client = connectMongoDB()
     collection = selectCollectionMongoDB(client)
 
+    #Add timestamp before fetching
     data["date"] = datetime.datetime.now()
+
+    #Fetch data for multiple purpose
+    fetchData(data)
 
     result = insertElementMongoDB(collection, data)
     strReturn = 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
