@@ -4,7 +4,7 @@ import datetime
 
 from database import *
 from fetch import fetchData
-
+from logs import saveLog
 
 def responseTest(data):
     client = connectMongoDB()
@@ -18,6 +18,7 @@ def responseTest(data):
 
     result = insertElementMongoDB(collection, data)
     strReturn = 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
+    saveLog("request.py",strReturn)
 
     closeMongoDB(client)
 
