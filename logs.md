@@ -511,3 +511,71 @@ Percentuale dispositivi Samsung: 0.2
  
 **[2017-07-17 00:49:10.484000]:** Successfully inserted, with ID: 596bed66198adf1db4348e04
  
+## fetch.py
+ 
+**[2017-07-17 10:42:49.901000]:** Successfully inserted with ID: 596c7889198adf16e8715a35
+
+ 
+## fetch.py
+ 
+**[2017-07-17 10:42:49.910000]:** Percentuale dispositivi Samsung: 0
+ 
+## fetch.py
+ 
+**[2017-07-17 10:42:49.922000]:** Percentuale dispositivi Apple: 0
+ 
+## request.py
+ 
+**[2017-07-17 10:42:49.955000]:** Successfully inserted, with ID: 596c7889198adf16e8715a36
+ 
+## fetch.py
+ 
+**[2017-07-17 10:50:05.369000]:** Successfully inserted with ID: 596c7a3d198adf2494d1bb6f
+
+ 
+## fetch.py
+ 
+**[2017-07-17 10:50:05.382000]:** Percentuale dispositivi Samsung: 0
+ 
+## fetch.py
+ 
+**[2017-07-17 10:50:05.394000]:** Percentuale dispositivi Apple: 0
+ 
+## request.py
+ 
+**[2017-07-17 10:50:05.425000]:** Successfully inserted, with ID: 596c7a3d198adf2494d1bb70
+ 
+## fetch.py
+ 
+**[2017-07-17 10:51:29.582000]:** Successfully inserted with ID: 596c7a91198adf0d28d4f935
+
+ 
+## fetch.py
+ 
+**[2017-07-17 10:51:29.594000]:** Percentuale dispositivi Samsung: 0
+ 
+## fetch.py
+ 
+**[2017-07-17 10:51:29.606000]:** Percentuale dispositivi Apple: 0
+ 
+## request.py
+ 
+**[2017-07-17 10:51:29.627000]:** Successfully inserted, with ID: 596c7a91198adf0d28d4f936
+ 
+## fetch.py
+ 
+**[2017-07-17 10:52:29.619000]:** Successfully inserted with ID: 596c7acd198adf1ff0a08243
+
+ 
+## fetch.py
+ 
+**[2017-07-17 10:52:29.623000]:** Percentuale dispositivi Samsung: 0
+ 
+## fetch.py
+ 
+**[2017-07-17 10:52:29.627000]:** Percentuale dispositivi Apple: 0
+ 
+## request.py
+ 
+**[2017-07-17 10:52:29.643000]:** Successfully inserted, with ID: 596c7acd198adf1ff0a08244
+ 

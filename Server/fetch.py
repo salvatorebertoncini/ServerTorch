@@ -16,9 +16,17 @@ def ManufacturerFetch(device, imei, deviceList):
         counter = 1
         deviceList["device"].append({"IMEI": [imei], "Brand": device, "counter": counter})
     else:
-        map(lambda x: [x["IMEI"].append(imei), x["counter"] + 1], filter(lambda x: x["Brand"] == device, deviceList["device"]))
+        #append imei work fine, counter++ dont
+        #map(lambda x: x["IMEI"].append(imei), filter(lambda x: x["Brand"] == device, deviceList["device"]))
+        #map(lambda x: x["counter"] + 1, filter(lambda x: x["Brand"] == device, deviceList["device"]))
 
-    #deviceList["totalCounter"] += 1
+        #append and couter++ into foreach loop
+        for d in deviceList["device"]:
+            if d["Brand"] == device:
+                d["IMEI"].append(imei)
+                d["counter"] += 1
+
+    deviceList["totalCounter"] += 1
 
     return deviceList
 
