@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import json
 
 """
 per collegarsi al db:
@@ -10,6 +11,7 @@ db.aggregate.find() per vedere tutto
 """
 
 DBNAME = 'SpyTorch'
+DBFETCHNAME = 'datafetching'
 DBCOLLECTION = 'aggregate'
 DBHOST = 'localhost'
 DBPORT = 32768
@@ -36,3 +38,18 @@ def selectLatestNElementsMongoDB(collection, N):
 #Insert and element into a collection
 def insertElementMongoDB(collection, data):
     return collection.insert_one(data)
+
+def initializeDB():
+    #Initialize client
+    client = connectMongoDB()
+
+    #select datafetch collection
+    collection = selectCollectionMongoDB(client, DBFETCHNAME)
+
+    #Check if storing DB is empty
+    if collection.count() == 0:
+        data = { "date": "", "stats": {"BuildInfo": {"Manufacturers": {"devices":[],"totalCounter": 0 } },"flag": True }}
+        insertElementMongoDB(collection, data)
+
+    #close mongo client
+    closeMongoDB(client)
