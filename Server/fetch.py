@@ -9,17 +9,10 @@ from logs import saveLog
 
 def ManufacturerFetch(device, imei, deviceList):
 
-    dev = filter(lambda x: x["Brand"] == device, deviceList["device"])
-    print dev
-
-    if not dev:
+    if not filter(lambda x: x["Brand"] == device, deviceList["device"]):
         counter = 1
         deviceList["device"].append({"IMEI": [imei], "Brand": device, "counter": counter})
     else:
-        #append imei work fine, counter++ dont
-        #map(lambda x: x["IMEI"].append(imei), filter(lambda x: x["Brand"] == device, deviceList["device"]))
-        #map(lambda x: x["counter"] + 1, filter(lambda x: x["Brand"] == device, deviceList["device"]))
-
         #append and couter++ into foreach loop
         for d in deviceList["device"]:
             if d["Brand"] == device:
@@ -32,8 +25,9 @@ def ManufacturerFetch(device, imei, deviceList):
 
 
 def DevicePercentage(device, deviceList):
-    if device in deviceList.keys():
-        return deviceList[device] / len(deviceList)
+    if filter(lambda x: x["Brand"] == device, deviceList["device"]):
+        #return device percentage, i.e. (counter/totalCounter)*100
+        return map(lambda x: (x["counter"] / deviceList["totalCounter"]) * 100, filter(lambda x: x["Brand"] == device, deviceList["device"]))
     else:
         return 0
 
@@ -56,20 +50,15 @@ def fetchData(data):
     #e.g. percentage of Apple devices in the database, LOL
     apple = DevicePercentage("Apple Inc.", BuildInfoList)
 
-    """   
-    #LambdaFetch with map function
-    lambdaf = map(lambda x: x["counter"]+1000, latest)
-    print "lambda function -> "+str(lambdaf)
-    """
-
     #Insert new results
     latest = { "date": datetime.datetime.now(), "stats": {"BuildInfo": {"Manufacturer": BuildInfoList}},"flag": True }
 
     #Save fetched element
     result = insertElementMongoDB(collection, latest)
     saveLog('fetch.py','Successfully inserted with ID: {0}'.format(result.inserted_id)+'\n')
-    saveLog('fetch.py', "Percentuale dispositivi Samsung: %s" % str(samsung))
-    saveLog('fetch.py', "Percentuale dispositivi Apple: %s" % str(apple))
+
+    print "Percentuale dispositivi Samsung: %s " % str(samsung)
+    print "Percentuale dispositivi Apple: %s " % str(apple)
 
     #Closing connection
     closeMongoDB(client)
