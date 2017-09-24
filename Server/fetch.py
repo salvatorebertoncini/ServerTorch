@@ -8,7 +8,6 @@ from logs import saveLog
 
 
 def ManufacturerFetch(device, imei, deviceList):
-
     if (not deviceList["devices"]) or (not filter(lambda x: x["Brand"] == device, deviceList["devices"])):
         counter = 1
         deviceList["devices"].append({"IMEI": [imei], "Brand": device, "counter": counter})

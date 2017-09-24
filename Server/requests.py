@@ -24,10 +24,33 @@ def responseTest(data):
 
     return strReturn
 
+def returnAllDevices():
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client, DBFETCHNAME)
+
+    result = {}
+    result["response"] = True
+
+
+    #Select latest element
+    result["devicesList"] = selectLatestNElementsMongoDB(collection, 3)
+
+    closeMongoDB(client)
+
+    return result
 
 def postRequest(request):
     data = json.loads(request.body)
-    response = responseTest(data)
+
+    print data
+
+    r = data["js_object"]["r"]
+    print "request: "+r
+
+    if r == "InsertDevice":
+        response = responseTest(data)
+    elif r == "WebAppAllDevices":
+        response = returnAllDevices()
 
     if response is None:
         response = 'errore'
