@@ -232,3 +232,12 @@
  
 **[2017-09-24 18:46:43.885000]:** Successfully inserted, with ID: 59c7e173198adf1cb0f6079b
  
+## fetch.py
+ 
+**[2017-09-25 10:46:59.083000]:** Successfully inserted with ID: 59c8c283198adf1dd02d7d1a
+
+ 
+## request.py
+ 
+**[2017-09-25 10:46:59.099000]:** Successfully inserted, with ID: 59c8c283198adf1dd02d7d1b
+ 

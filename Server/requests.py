@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 import json
 import datetime
+from django.http import JsonResponse, HttpResponse
+from bson import BSON, json_util
 
 from database import *
 from fetch import fetchData
@@ -29,11 +31,13 @@ def returnAllDevices():
     collection = selectCollectionMongoDB(client, DBFETCHNAME)
 
     result = {}
-    result["response"] = True
 
+    result = {'title': 'hello world'}
+    #result['response'] = 'True'
 
     #Select latest element
-    result["devicesList"] = selectLatestNElementsMongoDB(collection, 3)
+    #result["devicesList"] = json_util.dumps(selectLatestNElementsMongoDB(collection, 3))
+    #result = json_util.dumps(selectLatestNElementsMongoDB(collection, 3), sort_keys=True, indent=4, default=json_util.default)
 
     closeMongoDB(client)
 
@@ -48,15 +52,22 @@ def postRequest(request):
     print "request: "+r
 
     if r == "InsertDevice":
-        response = responseTest(data)
+        response = responseTest(data["js_object"])
     elif r == "WebAppAllDevices":
         response = returnAllDevices()
 
     if response is None:
         response = 'errore'
 
-    return response
+    print "response: "
+    print json.dumps(response)
 
+    return JsonResponse(response)
+
+    #return HttpResponse(json.dumps(response), content_type='application/json; charset=utf-8',)
+    #return HttpResponse(json.dumps(response))
+    #return json.dumps(response)
+    #return response
 
 def getRequest(request):
     return "GET Request with foo: " + request.GET.get('foo', '') + ' and bar: ' + request.GET.get('bar', '')
