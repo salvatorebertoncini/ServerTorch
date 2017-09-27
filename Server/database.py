@@ -35,6 +35,11 @@ def selectCollectionMongoDB(client, dbname=DBNAME):
 def selectLatestNElementsMongoDB(collection, N):
     return list(collection.find().skip(collection.count() - N))
 
+
+# Select the latest N elements of a collection, returning them in a list
+def selectIMEIForBrand(collection, brand):
+    return list(collection.find().skip(collection.count() - brand))
+
 #Insert and element into a collection
 def insertElementMongoDB(collection, data):
     return collection.insert_one(data)

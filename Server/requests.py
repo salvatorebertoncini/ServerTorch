@@ -31,11 +31,23 @@ def returnAllDevices():
     collection = selectCollectionMongoDB(client, DBFETCHNAME)
 
     result = {}
-
     result['response'] = True
-
     #Select latest element
     result["devicesList"] = json_util.dumps(selectLatestNElementsMongoDB(collection, 1))
+
+    closeMongoDB(client)
+
+    return result
+
+
+def IMEIwithSlug(slug):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client, DBFETCHNAME)
+
+    result = {}
+    result["response"] = True
+    # result["IMEIList"] = json_util.dumps(selectIMEIForBrand(collection, Brand))
+    result["IMEIList"] = json_util.dumps(selectLatestNElementsMongoDB(collection, 1))
 
     closeMongoDB(client)
 
@@ -53,6 +65,8 @@ def postRequest(request):
         response = responseTest(data["js_object"])
     elif r == "WebAppAllDevices":
         response = returnAllDevices()
+    elif r == "GetIMEIWithSlug":
+        response = IMEIwithSlug(data["js_object"]["s"])
 
     if response is None:
         response = 'errore'
