@@ -10,7 +10,8 @@ from requests import *
 def index(request):
     if request.method == "POST":
         response = postRequest(request)
-        return HttpResponse("Response: %s" % str(response))
+        # return HttpResponse("Response: %s" % str(response))
+        return JsonResponse(response)
 
     elif request.method == "GET":
         response = getRequest(request)
