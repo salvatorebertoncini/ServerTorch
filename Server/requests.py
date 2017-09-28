@@ -46,8 +46,26 @@ def IMEIwithSlug(slug):
 
     result = {}
     result["response"] = True
-    # result["IMEIList"] = json_util.dumps(selectIMEIForBrand(collection, Brand))
-    result["IMEIList"] = json_util.dumps(selectLatestNElementsMongoDB(collection, 1))
+    result["IMEIList"] = []
+    allResult = selectLatestNElementsMongoDB(collection, 1)
+
+    #    for devices in allResult:
+    #        device = devices["stats"]["BuildInfo"]["Manufacturers"]["devices"]
+    #        for brand in device:
+    #            if brand["Brand"] == slug:
+    #                result["IMEIList"] = brand
+
+    for brand in allResult[0]["stats"]["BuildInfo"]["Manufacturers"]["devices"]:
+        if brand["Brand"] == slug:
+            result["IMEIList"] = brand
+
+    if not result["IMEIList"]:
+        result["response"] = False
+    else:
+        print "Imei List:"
+        print result["IMEIList"]
+
+    result["IMEIList"] = json_util.dumps(result["IMEIList"])
 
     closeMongoDB(client)
 

@@ -11,7 +11,7 @@ def index(request):
     if request.method == "POST":
         response = postRequest(request)
         # return HttpResponse("Response: %s" % str(response))
-        return JsonResponse(response)
+        return JsonResponse(response, safe=False)
 
     elif request.method == "GET":
         response = getRequest(request)
