@@ -61,9 +61,6 @@ def IMEIwithSlug(slug):
 
     if not result["IMEIList"]:
         result["response"] = False
-    else:
-        print "Imei List:"
-        print result["IMEIList"]
 
     result["IMEIList"] = json_util.dumps(result["IMEIList"])
 

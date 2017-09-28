@@ -11,14 +11,17 @@ def ManufacturerFetch(device, imei, deviceList):
     if (not deviceList["devices"]) or (not filter(lambda x: x["Brand"] == device, deviceList["devices"])):
         counter = 1
         deviceList["devices"].append({"IMEI": [imei], "Brand": device, "counter": counter})
+        deviceList["totalCounter"] += 1
+
     else:
         #append and couter++ into foreach loop
         for d in deviceList["devices"]:
             if d["Brand"] == device:
-                d["IMEI"].append(imei)
-                d["counter"] += 1
-
-    deviceList["totalCounter"] += 1
+                # if imei isn't alredy inserted
+                if not imei in d["IMEI"]:
+                    d["IMEI"].append(imei)
+                    d["counter"] += 1
+                    deviceList["totalCounter"] += 1
 
     return deviceList
 
