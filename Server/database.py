@@ -35,6 +35,23 @@ def selectCollectionMongoDB(client, dbname=DBNAME):
 def selectLatestNElementsMongoDB(collection, N):
     return list(collection.find().skip(collection.count() - N))
 
+
+def selectAllUsers():
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.find()
+
+
+# Select user with slug
+def selectUserWithSlug(slug):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.find({"UserInfo": {"Username": slug}})
+
 #Insert and element into a collection
 def insertElementMongoDB(collection, data):
     return collection.insert_one(data)

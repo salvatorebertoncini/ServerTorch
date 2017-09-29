@@ -63,25 +63,61 @@ def IMEIwithSlug(slug):
         result["response"] = False
 
     result["IMEIList"] = json_util.dumps(result["IMEIList"])
-
     closeMongoDB(client)
 
     return result
+
+
+def UserWithSlug(slug):
+    result = {}
+    result["response"] = False
+    result["UserList"] = selectUserWithSlug(slug)
+
+    if result["UserList"]:
+        result["response"] = True
+
+    result["UserList"] = json_util.dumps(result["UserList"])
+
+    return result
+
+
+def AllUsers():
+    result = {}
+    result["response"] = False
+    result["UserList"] = []
+    tmpResult = selectAllUsers()
+
+    for user in tmpResult:
+        print user
+        if user["UserInfo"]["Username"] in result["UserList"]:
+            result["UserList"].append(user["UserInfo"]["Username"])
+
+    if result["UserList"]:
+        result["response"] = True
+
+    result["UserList"] = json_util.dumps(result["UserList"])
+
+    return result
+
 
 def postRequest(request):
     data = json.loads(request.body)
 
     print data
 
-    r = data["js_object"]["r"]
+    r = data["r"]
     print "request: "+r
 
     if r == "InsertDevice":
-        response = responseTest(data["js_object"])
+        response = responseTest(data)
     elif r == "WebAppAllDevices":
         response = returnAllDevices()
     elif r == "GetIMEIWithSlug":
-        response = IMEIwithSlug(data["js_object"]["s"])
+        response = IMEIwithSlug(data["slug"])
+    elif r == "GetUserWithSlug":
+        response = UserWithSlug(data["slug"])
+    elif r == "GetAllUsers":
+        response = AllUsers()
 
     if response is None:
         response = 'errore'

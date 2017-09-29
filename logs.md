@@ -340,3 +340,183 @@
  
 **[2017-09-28 17:32:31.021000]:** Successfully inserted, with ID: 59cd160f198adf1e80e086d4
  
+## fetch.py
+ 
+**[2017-09-28 17:35:14.647000]:** Successfully inserted with ID: 59cd16b2198adf05e8c73eb1
+
+ 
+## request.py
+ 
+**[2017-09-28 17:35:14.670000]:** Successfully inserted, with ID: 59cd16b2198adf05e8c73eb2
+ 
+## fetch.py
+ 
+**[2017-09-28 17:35:33.539000]:** Successfully inserted with ID: 59cd16c5198adf05e8c73eb7
+
+ 
+## request.py
+ 
+**[2017-09-28 17:35:33.554000]:** Successfully inserted, with ID: 59cd16c5198adf05e8c73eb8
+ 
+## fetch.py
+ 
+**[2017-09-28 18:29:11.236000]:** Successfully inserted with ID: 59cd2357198adf05e8c73ecb
+
+ 
+## request.py
+ 
+**[2017-09-28 18:29:11.268000]:** Successfully inserted, with ID: 59cd2357198adf05e8c73ecc
+ 
+## fetch.py
+ 
+**[2017-09-28 18:29:51.147000]:** Successfully inserted with ID: 59cd237f198adf05e8c73ecf
+
+ 
+## request.py
+ 
+**[2017-09-28 18:29:51.163000]:** Successfully inserted, with ID: 59cd237f198adf05e8c73ed0
+ 
+## fetch.py
+ 
+**[2017-09-28 18:37:31.063000]:** Successfully inserted with ID: 59cd254b198adf05e8c73ed3
+
+ 
+## request.py
+ 
+**[2017-09-28 18:37:31.086000]:** Successfully inserted, with ID: 59cd254b198adf05e8c73ed4
+ 
+## fetch.py
+ 
+**[2017-09-28 19:06:35.932000]:** Successfully inserted with ID: 59cd2c1b198adf05e8c73edd
+
+ 
+## request.py
+ 
+**[2017-09-28 19:06:35.949000]:** Successfully inserted, with ID: 59cd2c1b198adf05e8c73ede
+ 
+## fetch.py
+ 
+**[2017-09-28 19:18:42.105000]:** Successfully inserted with ID: 59cd2ef2198adf05e8c73ee1
+
+ 
+## request.py
+ 
+**[2017-09-28 19:18:42.131000]:** Successfully inserted, with ID: 59cd2ef2198adf05e8c73ee2
+ 
+## fetch.py
+ 
+**[2017-09-28 19:18:46.500000]:** Successfully inserted with ID: 59cd2ef6198adf05e8c73ee5
+
+ 
+## request.py
+ 
+**[2017-09-28 19:18:46.524000]:** Successfully inserted, with ID: 59cd2ef6198adf05e8c73ee6
+ 
+## fetch.py
+ 
+**[2017-09-28 19:20:00.485000]:** Successfully inserted with ID: 59cd2f40198adf05e8c73ee9
+
+ 
+## request.py
+ 
+**[2017-09-28 19:20:00.531000]:** Successfully inserted, with ID: 59cd2f40198adf05e8c73eea
+ 
+## fetch.py
+ 
+**[2017-09-28 19:22:40.569000]:** Successfully inserted with ID: 59cd2fe0198adf05e8c73eed
+
+ 
+## request.py
+ 
+**[2017-09-28 19:22:40.590000]:** Successfully inserted, with ID: 59cd2fe0198adf05e8c73eee
+ 
+## fetch.py
+ 
+**[2017-09-29 16:17:31.613000]:** Successfully inserted with ID: 59ce55fb198adf2ff0151fef
+
+ 
+## request.py
+ 
+**[2017-09-29 16:17:31.645000]:** Successfully inserted, with ID: 59ce55fb198adf2ff0151ff0
+ 
+## fetch.py
+ 
+**[2017-09-29 16:20:19.908000]:** Successfully inserted with ID: 59ce56a3198adf2ff0151ff3
+
+ 
+## request.py
+ 
+**[2017-09-29 16:20:19.938000]:** Successfully inserted, with ID: 59ce56a3198adf2ff0151ff4
+ 
+## fetch.py
+ 
+**[2017-09-29 16:20:59.821000]:** Successfully inserted with ID: 59ce56cb198adf2ff0151ff7
+
+ 
+## request.py
+ 
+**[2017-09-29 16:20:59.849000]:** Successfully inserted, with ID: 59ce56cb198adf2ff0151ff8
+ 
+## fetch.py
+ 
+**[2017-09-29 16:28:53.762000]:** Successfully inserted with ID: 59ce58a5198adf2ff0151ffb
+
+ 
+## request.py
+ 
+**[2017-09-29 16:28:53.788000]:** Successfully inserted, with ID: 59ce58a5198adf2ff0151ffc
+ 
+## fetch.py
+ 
+**[2017-09-29 16:31:11.198000]:** Successfully inserted with ID: 59ce592f198adf2ff0151fff
+
+ 
+## request.py
+ 
+**[2017-09-29 16:31:11.213000]:** Successfully inserted, with ID: 59ce592f198adf2ff0152000
+ 
+## fetch.py
+ 
+**[2017-09-29 16:58:09.467000]:** Successfully inserted with ID: 59ce5f81198adf0634d60896
+
+ 
+## request.py
+ 
+**[2017-09-29 16:58:09.515000]:** Successfully inserted, with ID: 59ce5f81198adf0634d60897
+ 
+## fetch.py
+ 
+**[2017-09-29 16:58:55.888000]:** Successfully inserted with ID: 59ce5faf198adf0634d6089a
+
+ 
+## request.py
+ 
+**[2017-09-29 16:58:55.914000]:** Successfully inserted, with ID: 59ce5faf198adf0634d6089b
+ 
+## fetch.py
+ 
+**[2017-09-29 17:01:10.851000]:** Successfully inserted with ID: 59ce6036198adf0634d6089e
+
+ 
+## request.py
+ 
+**[2017-09-29 17:01:10.871000]:** Successfully inserted, with ID: 59ce6036198adf0634d6089f
+ 
+## fetch.py
+ 
+**[2017-09-29 17:02:06.414000]:** Successfully inserted with ID: 59ce606e198adf0634d608a2
+
+ 
+## request.py
+ 
+**[2017-09-29 17:02:06.448000]:** Successfully inserted, with ID: 59ce606e198adf0634d608a3
+ 
+## fetch.py
+ 
+**[2017-09-29 17:09:00.067000]:** Successfully inserted with ID: 59ce620c198adf0634d608a6
+
+ 
+## request.py
+ 
+**[2017-09-29 17:09:00.110000]:** Successfully inserted, with ID: 59ce620c198adf0634d608a7
+ 
