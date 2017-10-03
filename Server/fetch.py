@@ -25,7 +25,6 @@ def ManufacturerFetch(device, imei, deviceList):
 
     return deviceList
 
-
 def DevicePercentage(device, deviceList):
     if (not deviceList["devices"]) or (not filter(lambda x: x["Brand"] == device, deviceList["devices"])):
         return 0
@@ -34,12 +33,8 @@ def DevicePercentage(device, deviceList):
         return ( map(lambda x: x["counter"], filter(lambda x: x["Brand"] == device, deviceList["devices"]))[0] *100)  / deviceList["totalCounter"]
 
 def fetchData(data):
-    #MongoDB connection, selecting "datafetching" database
-    client = connectMongoDB()
-    collection = selectCollectionMongoDB(client, DBFETCHNAME)
-
     #Select latest element
-    latest = selectLatestNElementsMongoDB(collection, 1)
+    latest = selectLatestNElementsMongoDB(1)
 
     #Fetch Manufacturer
     BuildInfoList = latest[0]["stats"]["BuildInfo"]["Manufacturers"]
@@ -54,12 +49,10 @@ def fetchData(data):
     latest = { "date": datetime.datetime.now(), "stats": {"BuildInfo": {"Manufacturers": BuildInfoList}},"flag": True }
 
     #Save fetched element
-    result = insertElementMongoDB(collection, latest)
+    result = insertElementMongoDB(latest)
     saveLog('fetch.py','Successfully inserted with ID: {0}'.format(result.inserted_id)+'\n')
 
     print "Percentuale dispositivi Samsung: %s " % str(samsung)
     print "Percentuale dispositivi HTC: %s " % str(htc)
     print "Percentuale dispositivi Apple: %s " % str(apple)
 
-    #Closing connection
-    closeMongoDB(client)

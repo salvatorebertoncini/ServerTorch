@@ -32,8 +32,15 @@ def selectCollectionMongoDB(client, dbname=DBNAME):
     return db[DBCOLLECTION]
 
 #Select the latest N elements of a collection, returning them in a list
-def selectLatestNElementsMongoDB(collection, N):
-    return list(collection.find().skip(collection.count() - N))
+def selectLatestNElementsMongoDB(N):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    if N == 0:
+        return list(collection.find())
+    else:
+        return list(collection.find().skip(collection.count() - N))
 
 
 def selectAllUsers():
@@ -52,8 +59,44 @@ def selectUserWithSlug(slug):
 
     return collection.find({"UserInfo": {"Username": slug}})
 
+
+def selectDevicesWithSlug(slug):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.find({"TelephoneInfo.IMEI": slug})
+
+
+def selectMessagesList(username):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.find({"MessageUsername": username})
+
+
+def insertMessageList(message):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.insert_one(message)
+
+
+def updateMessageList(username, message):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.update({"MessageUsername": username}, message)
+
 #Insert and element into a collection
-def insertElementMongoDB(collection, data):
+def insertElementMongoDB(data):
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
     return collection.insert_one(data)
 
 def initializeDB():
