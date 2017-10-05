@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 import datetime
-from django.http import JsonResponse, HttpResponse
-import json
 from bson import BSON, json_util
 
 from database import *
@@ -61,7 +59,8 @@ def IMEIwithSlug(slug):
     for device in allResult:
         if (not devicesList) or (not filter(lambda x: x["Brand"] == device["BuildInfo"]["Manufacturer"], devicesList)):
             devicesList.append(
-                {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]], "counter": 1})
+                {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
+                 "Model": device["BuildInfo"]["Model"], "counter": 1})
         else:
             for d in devicesList:
                 if d["Brand"] == device["BuildInfo"]["Manufacturer"]:
@@ -142,17 +141,106 @@ def PushTheMessage(message):
     # {u'Message': {u'Username': u'Sconosciuto', u'Text': u'Ciaone', u'Sender': u'15555215554', u'ReceiverNumber': u'3482706721'}, u'r': u'pushMessageOut'}
     result = {}
     result["response"] = True
-    tmpResult = selectMessagesList(message["Username"])
 
-    if not tmpResult:
-        messageList = {"MessageUsername": "salvo.bertoncini", "MessageList": [
-            {"sender": message["Sender"], "receiver": message["ReceiverNumber"], "text": message["Text"]}]}
-        insertMessageList(messageList)
-    else:
-        tmpResult["MessageList"].append(
-            {"sender": message["Sender"], "receiver": message["ReceiverNumber"], "text": message["Text"]})
-        updateMessageList(tmpResult)
+    messageList = {"MessageUsername": message["Username"], "sender": message["Sender"],
+                   "receiver": message["ReceiverNumber"], "text": message["Text"], "IMEI": message["IMEI"]}
+    insertMessageList(messageList)
+
+
     return message
+
+
+def AllMessagesWithIMEI(slug):
+    response = {}
+    response['response'] = True
+    response["MessagesList"] = json_util.dumps(selectMessagesList(slug))
+
+    return response
+
+
+def AllDevices():
+    response = {}
+    response['response'] = True
+    allResult = selectAllDevices()
+    devicesList = []
+
+    for device in allResult:
+        if (not devicesList) or (
+        not filter(lambda x: x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"], devicesList)):
+            devicesList.append(device)
+        else:
+            for d in devicesList:
+                if d["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]:
+                    # if imei isn't alredy inserted
+                    if not device["TelephoneInfo"]["IMEI"] in d["TelephoneInfo"]["IMEI"]:
+                        devicesList.append(device)
+
+    response["DevicesList"] = json_util.dumps(devicesList)
+
+    return response
+
+
+def BrandStats():
+    response = {}
+    response["response"] = True
+    devicesList = []
+
+    allResult = selectAllDevices()
+
+    # map device[brand] in devicesList->device[brand]
+    for device in allResult:
+        if (not devicesList) or (not filter(lambda x: x["Brand"] == device["BuildInfo"]["Manufacturer"], devicesList)):
+            devicesList.append({"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
+                                "Model": device["BuildInfo"]["Model"], "counter": 1})
+        else:
+            for d in devicesList:
+                if d["Brand"] == device["BuildInfo"]["Manufacturer"]:
+                    # if imei isn't alredy inserted
+                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
+                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
+                        d["counter"] += 1
+
+    response["DevicesList"] = json_util.dumps(devicesList)
+
+    return response
+
+
+def AndroidVersionStats():
+    response = {}
+    response["response"] = True
+
+    devicesList = []
+
+    allResult = selectAllDevices()
+
+    # map device[brand] in devicesList->device[brand]
+    for device in allResult:
+        if (not devicesList) or (not filter(lambda x: x["AndroidVersion"] == getAndroidVersion(device), devicesList)):
+            devicesList.append(
+                {"AndroidVersion": getAndroidVersion(device), "IMEI": [device["TelephoneInfo"]["IMEI"]], "counter": 1})
+        else:
+            for d in devicesList:
+                if d["AndroidVersion"] == getAndroidVersion(device):
+                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
+                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
+                        d["counter"] += 1
+
+    response["AndroidVersionList"] = json_util.dumps(devicesList)
+
+    return response
+
+
+def getAndroidVersion(device):
+    tmp = device["BuildInfo"]["Fingerprint"].split(':')
+    tmp1 = tmp[1]
+
+    array = tmp1[0] + tmp1[1] + tmp1[2]
+
+    if tmp1[3] == '.':
+        array += tmp1[3] + tmp1[4]
+
+    return array
+
 
 
 def postRequest(request):
@@ -178,10 +266,17 @@ def postRequest(request):
         response = DevicesWithSlug(data["slug"])
     elif r == "pushMessage":
         response = PushTheMessage(data["Message"])
-
+    elif r == "GetMessagesWithIMEI":
+        response = AllMessagesWithIMEI(data["slug"])
+    elif r == "GetAllDevices":
+        response = AllDevices()
+    elif r == "AndroidVersionStats":
+        response = AndroidVersionStats()
+    elif r == "BrandStats":
+        response = BrandStats()
 
     if response is None:
-        response = 'errore'
+        response["response"] = 'errore'
 
     print "response: "
     print json.dumps(response)

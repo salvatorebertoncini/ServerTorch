@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from requests import *
@@ -10,7 +10,6 @@ from requests import *
 def index(request):
     if request.method == "POST":
         response = postRequest(request)
-        # return HttpResponse("Response: %s" % str(response))
         return JsonResponse(response, safe=False)
 
     elif request.method == "GET":

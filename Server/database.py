@@ -11,7 +11,7 @@ db.aggregate.find() per vedere tutto
 """
 
 DBNAME = 'SpyTorch'
-DBFETCHNAME = 'datafetching'
+DBFETCHNAME = 'messages'
 DBCOLLECTION = 'aggregate'
 DBHOST = 'localhost'
 DBPORT = 32768
@@ -27,9 +27,9 @@ def closeMongoDB(client):
     client.close()
 
 #Select the collection, implying dbname as default DBNAME
-def selectCollectionMongoDB(client, dbname=DBNAME):
+def selectCollectionMongoDB(client, dbcollection=DBCOLLECTION, dbname=DBNAME):
     db = client[dbname]
-    return db[DBCOLLECTION]
+    return db[dbcollection]
 
 #Select the latest N elements of a collection, returning them in a list
 def selectLatestNElementsMongoDB(N):
@@ -68,17 +68,17 @@ def selectDevicesWithSlug(slug):
     return collection.find({"TelephoneInfo.IMEI": slug})
 
 
-def selectMessagesList(username):
+def selectMessagesList(slug):
     client = connectMongoDB()
-    collection = selectCollectionMongoDB(client)
+    collection = selectCollectionMongoDB(client, DBFETCHNAME)
     closeMongoDB(client)
 
-    return collection.find({"MessageUsername": username})
+    return collection.find({"IMEI": slug})
 
 
 def insertMessageList(message):
     client = connectMongoDB()
-    collection = selectCollectionMongoDB(client)
+    collection = selectCollectionMongoDB(client, DBFETCHNAME)
     closeMongoDB(client)
 
     return collection.insert_one(message)
@@ -91,6 +91,14 @@ def updateMessageList(username, message):
 
     return collection.update({"MessageUsername": username}, message)
 
+
+def selectAllDevices():
+    client = connectMongoDB()
+    collection = selectCollectionMongoDB(client)
+    closeMongoDB(client)
+
+    return collection.find()
+
 #Insert and element into a collection
 def insertElementMongoDB(data):
     client = connectMongoDB()
@@ -99,6 +107,8 @@ def insertElementMongoDB(data):
 
     return collection.insert_one(data)
 
+
+"""
 def initializeDB():
     #Initialize client
     client = connectMongoDB()
@@ -113,3 +123,4 @@ def initializeDB():
 
     #close mongo client
     closeMongoDB(client)
+"""
