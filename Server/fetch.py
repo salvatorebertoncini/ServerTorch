@@ -1,10 +1,45 @@
 from database import *
 from logs import saveLog
-import datetime
+import time
 import re
 
 #JSON Example
 #{ "date": "", "stats": {"BuildInfo": {"Manufacturers": { "devices": [{"Brand": "Samsung","IMEI" : ["1012021002", "1283298372"],	"counter": 2},{	"Brand": "Huawei","IMEI" : ["12382121321", "213213211", "29183120938721"],"counter": 3}	],"totalCounter": 5 } },"flag": true }}
+
+def todayDay():
+    print "ecco"
+    print "tempo: " + time.strftime("%Y-%M-%D")
+    return time.strftime("%H")
+
+
+def getDate(date):
+    regex = r"(\d.*?) "
+    test_str = date
+
+    matches = re.finditer(regex, test_str)
+
+    for matchNum, match in enumerate(matches):
+        matchNum = matchNum + 1
+
+        for groupNum in range(0, len(match.groups())):
+            groupNum = groupNum + 1
+
+            return match.group(groupNum)
+
+
+def getHourByDate(date):
+    regex = r" (\d.*?):"
+    test_str = date
+
+    matches = re.finditer(regex, test_str)
+
+    for matchNum, match in enumerate(matches):
+        matchNum = matchNum + 1
+
+        for groupNum in range(0, len(match.groups())):
+            groupNum = groupNum + 1
+
+            return match.group(groupNum)
 
 def getAndroidVersion(device):
     regex = r":(\d.*?)/"
