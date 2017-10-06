@@ -11,9 +11,6 @@ def InsertDevice(data):
     #Add timestamp before fetching
     data["date"] = datetime.datetime.now()
 
-    #Fetch data for multiple purpose
-    # fetchData(data)
-
     result = insertElementMongoDB(data)
     strReturn = 'Successfully inserted, with ID: {0}'.format(result.inserted_id)
     saveLog("request.py",strReturn)
@@ -36,12 +33,12 @@ def returnAllDevices():
             devicesList.append(
                 {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]], "counter": 1})
         else:
-            for d in devicesList:
-                if d["Brand"] == device["BuildInfo"]["Manufacturer"]:
-                    # if imei isn't alredy inserted
-                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
-                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
-                        d["counter"] += 1
+            map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]), (filter(
+                lambda x: (x["Brand"] == device["BuildInfo"]["Manufacturer"]) and (
+                not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
+
+    for device in devicesList:
+        device["counter"] = len(device["IMEI"])
 
     result["devicesList"] = json_util.dumps(devicesList)
 
@@ -62,18 +59,17 @@ def IMEIwithSlug(slug):
                 {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
                  "Model": device["BuildInfo"]["Model"], "counter": 1})
         else:
-            for d in devicesList:
-                if d["Brand"] == device["BuildInfo"]["Manufacturer"]:
-                    # if imei isn't alredy inserted
-                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
-                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
-                        d["counter"] += 1
+            map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]),
+                (filter(lambda x: (x["Brand"] == device["BuildInfo"]["Manufacturer"]) and (
+                not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
+
+    for device in devicesList:
+        device["counter"] = len(device["IMEI"])
+
+        if device["Brand"] == slug:
+            result["IMEIList"] = device
 
     result["devicesList"] = json_util.dumps(devicesList)
-
-    for brand in devicesList:
-        if brand["Brand"] == slug:
-            result["IMEIList"] = brand
 
     if not result["IMEIList"]:
         result["response"] = False
@@ -94,11 +90,10 @@ def UserWithSlug(slug):
         not filter(lambda x: x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"], userList)):
             userList.append(device)
         else:
-            for d in userList:
-                if d["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]:
-                    # if imei isn't alredy inserted
-                    if not device["TelephoneInfo"]["IMEI"] in d["TelephoneInfo"]["IMEI"]:
-                        userList.append(device)
+            if (filter(lambda x: (x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]) and (
+            not device["TelephoneInfo"]["IMEI"] in x["TelephoneInfo"]["IMEI"]), userList)):
+                # if imei isn't alredy inserted
+                userList.append(device)
 
     result["UserList"] = json_util.dumps(userList)
 
@@ -169,11 +164,9 @@ def AllDevices():
         not filter(lambda x: x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"], devicesList)):
             devicesList.append(device)
         else:
-            for d in devicesList:
-                if d["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]:
-                    # if imei isn't alredy inserted
-                    if not device["TelephoneInfo"]["IMEI"] in d["TelephoneInfo"]["IMEI"]:
-                        devicesList.append(device)
+            map(lambda x: devicesList.append(x), filter(
+                lambda x: (x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]) and (
+                not device["TelephoneInfo"]["IMEI"] in x["TelephoneInfo"]["IMEI"]), devicesList))
 
     response["DevicesList"] = json_util.dumps(devicesList)
 
@@ -193,12 +186,12 @@ def BrandStats():
             devicesList.append({"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
                                 "Model": device["BuildInfo"]["Model"], "counter": 1})
         else:
-            for d in devicesList:
-                if d["Brand"] == device["BuildInfo"]["Manufacturer"]:
-                    # if imei isn't alredy inserted
-                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
-                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
-                        d["counter"] += 1
+            map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]),
+                (filter(lambda x: (x["Brand"] == device["BuildInfo"]["Manufacturer"]) and (
+                    not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
+
+        for device in devicesList:
+            device["counter"] = len(device["IMEI"])
 
     response["DevicesList"] = json_util.dumps(devicesList)
 
@@ -219,29 +212,16 @@ def AndroidVersionStats():
             devicesList.append(
                 {"AndroidVersion": getAndroidVersion(device), "IMEI": [device["TelephoneInfo"]["IMEI"]], "counter": 1})
         else:
-            for d in devicesList:
-                if d["AndroidVersion"] == getAndroidVersion(device):
-                    if not device["TelephoneInfo"]["IMEI"] in d["IMEI"]:
-                        d["IMEI"].append(device["TelephoneInfo"]["IMEI"])
-                        d["counter"] += 1
+            map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]),
+                (filter(lambda x: (x["AndroidVersion"] == getAndroidVersion(device)) and (
+                not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
+
+        for device in devicesList:
+            device["counter"] = len(device["IMEI"])
 
     response["AndroidVersionList"] = json_util.dumps(devicesList)
 
     return response
-
-
-"""
-def getAndroidVersion(device):
-    tmp = device["BuildInfo"]["Fingerprint"].split(':')
-    tmp1 = tmp[1]
-
-    array = tmp1[0] + tmp1[1] + tmp1[2]
-
-    if tmp1[3] == '.':
-        array += tmp1[3] + tmp1[4]
-
-    return array
-"""
 
 
 def postRequest(request):
