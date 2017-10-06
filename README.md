@@ -2,7 +2,7 @@
 Python2 Django-powered server, for accept and process:
 
 * [SpyTorch](https://github.com/salvobertoncini/SpyTorch) Android request
-* [SpyWebApp](https://github.com/salvobertoncini/SpyWebApp) AngularJS-based request
+* [SpyWebApp](https://github.com/salvobertoncini/SpyWebApp) Angular4-based request
 
 Dependencies: 
 
