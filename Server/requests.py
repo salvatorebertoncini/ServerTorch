@@ -3,7 +3,7 @@ import datetime
 from bson import BSON, json_util
 
 from database import *
-from fetch import fetchData
+from fetch import *
 from logs import saveLog
 
 
@@ -230,6 +230,7 @@ def AndroidVersionStats():
     return response
 
 
+"""
 def getAndroidVersion(device):
     tmp = device["BuildInfo"]["Fingerprint"].split(':')
     tmp1 = tmp[1]
@@ -240,7 +241,7 @@ def getAndroidVersion(device):
         array += tmp1[3] + tmp1[4]
 
     return array
-
+"""
 
 
 def postRequest(request):
