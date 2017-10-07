@@ -1,15 +1,25 @@
 from database import *
 from logs import saveLog
-import time
+import time, datetime
 import re
 
 #JSON Example
 #{ "date": "", "stats": {"BuildInfo": {"Manufacturers": { "devices": [{"Brand": "Samsung","IMEI" : ["1012021002", "1283298372"],	"counter": 2},{	"Brand": "Huawei","IMEI" : ["12382121321", "213213211", "29183120938721"],"counter": 3}	],"totalCounter": 5 } },"flag": true }}
 
-def todayDay():
-    print "ecco"
-    print "tempo: " + time.strftime("%Y-%M-%D")
-    return time.strftime("%H")
+epoch = datetime.datetime.utcfromtimestamp(0)
+
+
+def unix_time_millis(dt):
+    return (dt - epoch).total_seconds() * 1000
+
+
+def todayDay(slug):
+    millis = int(round(time.time() * 1000))
+    if unix_time_millis(slug) - millis < 86400000:
+        return True
+    else:
+        return False
+
 
 
 def getDate(date):

@@ -230,30 +230,38 @@ def BatteryStatsWithIMEI(slug):
     response["all"] = []
     tmpResult = selectDevicesWithSlug(slug)
 
-    all = [{"value": '00', "counter": 0}, {"value": '01', "counter": 0}, {"value": '02', "counter": 0},
-           {"value": '03', "counter": 0},
-           {"value": '04', "counter": 0}, {"value": '05', "counter": 0}, {"value": '06', "counter": 0},
-           {"value": '07', "counter": 0},
-           {"value": '08', "counter": 0}, {"value": '09', "counter": 0}, {"value": '10', "counter": 0},
-           {"value": '11', "counter": 0},
-           {"value": '12', "counter": 0}, {"value": '13', "counter": 0}, {"value": '14', "counter": 0},
-           {"value": '15', "counter": 0},
-           {"value": '16', "counter": 0}, {"value": '17', "counter": 0}, {"value": '18', "counter": 0},
-           {"value": '19', "counter": 0},
-           {"value": '20', "counter": 0}, {"value": '21', "counter": 0}, {"value": '22', "counter": 0},
-           {"value": '23', "counter": 0}
+    all = [{"value": '00', "counter": 0, "battery": 0}, {"value": '01', "counter": 0, "battery": 0},
+           {"value": '02', "counter": 0, "battery": 0},
+           {"value": '03', "counter": 0, "battery": 0},
+           {"value": '04', "counter": 0, "battery": 0}, {"value": '05', "counter": 0, "battery": 0},
+           {"value": '06', "counter": 0, "battery": 0},
+           {"value": '07', "counter": 0, "battery": 0},
+           {"value": '08', "counter": 0, "battery": 0}, {"value": '09', "counter": 0, "battery": 0},
+           {"value": '10', "counter": 0, "battery": 0},
+           {"value": '11', "counter": 0, "battery": 0},
+           {"value": '12', "counter": 0, "battery": 0}, {"value": '13', "counter": 0, "battery": 0},
+           {"value": '14', "counter": 0, "battery": 0},
+           {"value": '15', "counter": 0, "battery": 0},
+           {"value": '16', "counter": 0, "battery": 0}, {"value": '17', "counter": 0, "battery": 0},
+           {"value": '18', "counter": 0, "battery": 0},
+           {"value": '19', "counter": 0, "battery": 0},
+           {"value": '20', "counter": 0, "battery": 0}, {"value": '21', "counter": 0, "battery": 0},
+           {"value": '22', "counter": 0, "battery": 0},
+           {"value": '23', "counter": 0, "battery": 0}
            ];
 
     for device in tmpResult:
         for hour in all:
-            if (getHourByDate(str(device["date"])) == hour["value"]):
+            # se il documento rientra nelle ultime 24 ore
+            if (getHourByDate(str(device["date"])) == hour["value"] and hour["counter"] < 1) and (
+            todayDay(device["date"])):
                 hour["counter"] += 1
+                hour["battery"] = device["BatteryInfo"]["Level"]
 
     for hour in all:
-        response["all"].append(hour["counter"])
+        response["all"].append(hour["battery"])
 
     return response
-
 
 
 
