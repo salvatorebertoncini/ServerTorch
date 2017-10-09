@@ -14,8 +14,11 @@ class Requests:
     req = any
 
     # constructor
-    def __init__(self, req):
-        self.req = json.loads(req.body)
+    def __init__(self, req, opt="POST"):
+        if opt == "POST":
+            self.req = json.loads(req.body)
+        else:
+            self.req = req
 
     # getters
     def getBody(self):

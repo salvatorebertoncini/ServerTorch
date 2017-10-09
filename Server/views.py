@@ -14,6 +14,7 @@ def index(request):
         return JsonResponse(response, safe=False)
 
     elif request.method == "GET":
+        r = requests.Requests(request, "GET")
         response = r.getRequest(request)
         return HttpResponse("Response: %s" % str(response))
 
