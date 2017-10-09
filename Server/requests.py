@@ -169,10 +169,6 @@ class Requests:
         response = responses.Responses()
         response.setResponse("response", True)
 
-        messageList = {"MessageUsername": message["Username"], "sender": message["Sender"],
-                       "receiver": message["ReceiverNumber"], "text": message["Text"], "IMEI": message["IMEI"]}
-        insertMessageList(messageList)
-
         m = messages.Messages(message["Username"], message["Sender"], message["ReceiverNumber"], message["Text"],
                               message["IMEI"])
         messageList = m.createJson()
