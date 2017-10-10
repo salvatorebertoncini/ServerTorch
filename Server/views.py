@@ -10,7 +10,7 @@ import requests
 def index(request):
     if request.method == "POST":
         r = requests.Requests(request)
-        response = r.postRequest(request)
+        response = r.postRequest()
         return JsonResponse(response, safe=False)
 
     elif request.method == "GET":
