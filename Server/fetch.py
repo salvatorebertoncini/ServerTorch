@@ -1,15 +1,11 @@
-from database import *
 from logs import saveLog
-import time, datetime
+import time
+import datetime
 import re
-
-#JSON Example
-#{ "date": "", "stats": {"BuildInfo": {"Manufacturers": { "devices": [{"Brand": "Samsung","IMEI" : ["1012021002", "1283298372"],	"counter": 2},{	"Brand": "Huawei","IMEI" : ["12382121321", "213213211", "29183120938721"],"counter": 3}	],"totalCounter": 5 } },"flag": true }}
-
-epoch = datetime.datetime.utcfromtimestamp(0)
 
 
 def unix_time_millis(dt):
+    epoch = datetime.datetime.utcfromtimestamp(0)
     return (dt - epoch).total_seconds() * 1000
 
 
@@ -19,7 +15,6 @@ def todayDay(slug):
         return True
     else:
         return False
-
 
 
 def getDate(date):
@@ -51,6 +46,7 @@ def getHourByDate(date):
 
             return match.group(groupNum)
 
+
 def getAndroidVersion(device):
     regex = r":(\d.*?)/"
     test_str = device["BuildInfo"]["Fingerprint"]
@@ -66,52 +62,39 @@ def getAndroidVersion(device):
             return match.group(groupNum)
 
 
-def ManufacturerFetch(device, imei, deviceList):
-    if (not deviceList["devices"]) or (not filter(lambda x: x["Brand"] == device, deviceList["devices"])):
-        counter = 1
-        deviceList["devices"].append({"IMEI": [imei], "Brand": device, "counter": counter})
-        deviceList["totalCounter"] += 1
+def processDevicesList(allResult, devicesList):
+    # For every device in database, if devicesList is empty or don't contain that brand device, push that device in
+    # new brand document first and then in devicesList, else push that device in correct brand document first and
+    # then in devicesList
+    for device in allResult:
+        if (not devicesList) or (
+                not filter(lambda x: x["Brand"] == device["BuildInfo"]["Manufacturer"], devicesList)):
+            devicesList.append(
+                {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
+                 "counter": 1})
+        else:
+            map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]), (filter(
+                lambda x: (x["Brand"] == device["BuildInfo"]["Manufacturer"]) and (
+                    not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
 
+    # Count every devices
+    for device in devicesList:
+        device["counter"] = len(device["IMEI"])
+
+    return devicesList
+
+
+def mapIMEIinDevice(list, device):
+    # For every device in database, if userList is empty or don't contain that device with his IMEI, push that
+    # device in new brand document first and then in userList, else push that device in correct brand document
+    # first and then in userList
+    if (not list) or (
+            not filter(lambda x: x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"], list)):
+        list.append(device)
     else:
-        #append and couter++ into foreach loop
-        for d in deviceList["devices"]:
-            if d["Brand"] == device:
-                # if imei isn't alredy inserted
-                if not imei in d["IMEI"]:
-                    d["IMEI"].append(imei)
-                    d["counter"] += 1
-                    deviceList["totalCounter"] += 1
+        if (filter(lambda x: (x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]) and (
+                not device["TelephoneInfo"]["IMEI"] in x["TelephoneInfo"]["IMEI"]), list)):
+            # if imei isn't alredy inserted
+            list.append(device)
 
-    return deviceList
-
-def DevicePercentage(device, deviceList):
-    if (not deviceList["devices"]) or (not filter(lambda x: x["Brand"] == device, deviceList["devices"])):
-        return 0
-    else:
-        #return device percentage, i.e. (counter/totalCounter)*100
-        return ( map(lambda x: x["counter"], filter(lambda x: x["Brand"] == device, deviceList["devices"]))[0] *100)  / deviceList["totalCounter"]
-
-def fetchData(data):
-    #Select latest element
-    latest = selectLatestNElementsMongoDB(1)
-
-    #Fetch Manufacturer
-    BuildInfoList = latest[0]["stats"]["BuildInfo"]["Manufacturers"]
-    BuildInfoList = ManufacturerFetch(data["BuildInfo"]["Manufacturer"], data["TelephoneInfo"]["IMEI"], BuildInfoList)
-
-    #e.g. percentage of Samsung devices in the database
-    samsung = DevicePercentage("Samsung", BuildInfoList)
-    htc = DevicePercentage("HTC", BuildInfoList)
-    apple = DevicePercentage("Apple Inc.", BuildInfoList)
-
-    #Insert new results
-    latest = { "date": datetime.datetime.now(), "stats": {"BuildInfo": {"Manufacturers": BuildInfoList}},"flag": True }
-
-    #Save fetched element
-    result = insertElementMongoDB(latest)
-    saveLog('fetch.py','Successfully inserted with ID: {0}'.format(result.inserted_id)+'\n')
-
-    print "Percentuale dispositivi Samsung: %s " % str(samsung)
-    print "Percentuale dispositivi HTC: %s " % str(htc)
-    print "Percentuale dispositivi Apple: %s " % str(apple)
-
+    return list

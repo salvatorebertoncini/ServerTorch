@@ -47,27 +47,6 @@ class Requests:
         response.setResponse("Message", "Successfully inserted")
         return response
 
-    def processDevicesList(self, allResult, devicesList):
-        # For every device in database, if devicesList is empty or don't contain that brand device, push that device in
-        # new brand document first and then in devicesList, else push that device in correct brand document first and
-        # then in devicesList
-        for device in allResult:
-            if (not devicesList) or (
-            not filter(lambda x: x["Brand"] == device["BuildInfo"]["Manufacturer"], devicesList)):
-                devicesList.append(
-                    {"Brand": device["BuildInfo"]["Manufacturer"], "IMEI": [device["TelephoneInfo"]["IMEI"]],
-                     "counter": 1})
-            else:
-                map(lambda x: x["IMEI"].append(device["TelephoneInfo"]["IMEI"]), (filter(
-                    lambda x: (x["Brand"] == device["BuildInfo"]["Manufacturer"]) and (
-                        not device["TelephoneInfo"]["IMEI"] in x["IMEI"]), devicesList)))
-
-        # Count every devices
-        for device in devicesList:
-            device["counter"] = len(device["IMEI"])
-
-        return devicesList
-
     def returnAllDevices(self):
 
         # Initialize response
@@ -80,7 +59,7 @@ class Requests:
         # Initialize devices list
         devicesList = []
 
-        devicesList = self.processDevicesList(allResult, devicesList)
+        devicesList = fetch.processDevicesList(allResult, devicesList)
 
         # Set True response if devicesList is not empty
         if devicesList:
@@ -103,7 +82,7 @@ class Requests:
         devicesList = []
         IMEIList = []
 
-        devicesList = self.processDevicesList(allResult, devicesList)
+        devicesList = fetch.processDevicesList(allResult, devicesList)
 
         # For every device in devicesList, if it's the same brand name, push into the IMEIList
         for device in devicesList:
@@ -132,7 +111,7 @@ class Requests:
         allResult = database.selectUserWithSlug(slug)
 
         # Select and map only physical devices (without duplicate entry)
-        map(lambda x: self.mapIMEIinDevice(userList, x), allResult)
+        map(lambda x: fetch.mapIMEIinDevice(userList, x), allResult)
 
         # If userList is not empty
         if json_util.dumps(userList):
@@ -141,21 +120,6 @@ class Requests:
         # Set and return response
         response.setResponse("UserList", json_util.dumps(userList))
         return response
-
-    def mapIMEIinDevice(self, list, device):
-        # For every device in database, if userList is empty or don't contain that device with his IMEI, push that
-        # device in new brand document first and then in userList, else push that device in correct brand document
-        # first and then in userList
-        if (not list) or (
-                not filter(lambda x: x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"], list)):
-            list.append(device)
-        else:
-            if (filter(lambda x: (x["TelephoneInfo"]["IMEI"] == device["TelephoneInfo"]["IMEI"]) and (
-                    not device["TelephoneInfo"]["IMEI"] in x["TelephoneInfo"]["IMEI"]), list)):
-                # if imei isn't alredy inserted
-                list.append(device)
-
-        return list
 
 
     def AllUsers(self):
@@ -248,7 +212,7 @@ class Requests:
         devicesList = []
 
         # Select and map only physical devices (without duplicate entry)
-        map(lambda x: self.mapIMEIinDevice(devicesList, x), allResult)
+        map(lambda x: fetch.mapIMEIinDevice(devicesList, x), allResult)
 
         # Set and return response
         response.setResponse("DevicesList", json_util.dumps(devicesList))
@@ -263,7 +227,7 @@ class Requests:
 
         allResult = database.selectAllDevices()
 
-        devicesList = self.processDevicesList(allResult, devicesList)
+        devicesList = fetch.processDevicesList(allResult, devicesList)
 
         response.setResponse("DevicesList", json_util.dumps(devicesList))
         return response
