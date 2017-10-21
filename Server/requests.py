@@ -10,10 +10,11 @@ import messages
 import responses
 
 from Queue import Queue
-from threading import Thread
+from threading import Thread, Lock
 
 NUM_WORKERS = 4
 task_queue = Queue()
+tLock = Lock()
 
 # Initialize user list
 userList = []
@@ -136,8 +137,14 @@ class Requests:
         while True:
             user = task_queue.get()
 
+            # Acquire the Lock
+            tLock.acquire()
+
             if (not userList) or (not filter(lambda x: x == user, userList)):
                 userList.append(user)
+
+            # Release the Lock
+            tLock.release()
 
             # Mark the processed task as done
             task_queue.task_done()
@@ -155,7 +162,7 @@ class Requests:
         # for each tmpResult, create a thread
         threads = [Thread(target=self.worker) for _ in range(NUM_WORKERS)]
 
-        # Add the user to the task queue
+        # Add the username to the task queue
         [task_queue.put(user["UserInfo"]["Username"]) for user in tmpResult]
 
         # Start all the workers
