@@ -12,12 +12,6 @@ import responses
 from Queue import Queue
 from threading import Thread, Lock
 
-NUM_WORKERS = 4
-task_queue = Queue()
-tLock = Lock()
-
-# Initialize user list
-userList = []
 
 class Requests:
     req = any
@@ -131,8 +125,7 @@ class Requests:
         response.setResponse("UserList", json_util.dumps(userList))
         return response
 
-
-    def worker(self):
+    def worker(self, tLock, task_queue, userList):
         # Constantly check the queue for user
         while True:
             user = task_queue.get()
@@ -156,11 +149,23 @@ class Requests:
         response = responses.Responses()
         response.setResponse("response", False)
 
+        # How many thread
+        NUM_WORKERS = 4
+
+        # Create a Queue
+        task_queue = Queue()
+
+        # Create a Lock
+        tLock = Lock()
+
+        # Initialize user list
+        userList = []
+
         # Select all users
         tmpResult = database.selectAllUsers()
 
         # for each tmpResult, create a thread
-        threads = [Thread(target=self.worker) for _ in range(NUM_WORKERS)]
+        threads = [Thread(target=self.worker, args=(tLock, task_queue, userList)) for _ in range(NUM_WORKERS)]
 
         # Add the username to the task queue
         [task_queue.put(user["UserInfo"]["Username"]) for user in tmpResult]
