@@ -14,8 +14,9 @@ from threading import Thread
 
 NUM_WORKERS = 4
 task_queue = Queue()
+
 # Initialize user list
-listina = []
+userList = []
 
 class Requests:
     req = any
@@ -105,6 +106,7 @@ class Requests:
         response.setResponse("IMEIList", json_util.dumps(IMEIList))
         return response
 
+
     def UserWithSlug(self, slug):
 
         # Initialize response
@@ -128,16 +130,18 @@ class Requests:
         response.setResponse("UserList", json_util.dumps(userList))
         return response
 
+
     def worker(self):
-        # Constantly check the queue for addresses
+        # Constantly check the queue for user
         while True:
             user = task_queue.get()
 
-            if (not listina) or (not filter(lambda x: x == user, listina)):
-                listina.append(user)
+            if (not userList) or (not filter(lambda x: x == user, userList)):
+                userList.append(user)
 
             # Mark the processed task as done
             task_queue.task_done()
+
 
     def AllUsers(self):
 
@@ -145,16 +149,13 @@ class Requests:
         response = responses.Responses()
         response.setResponse("response", False)
 
-        # Initialize user list
-        userList = []
-
         # Select all users
         tmpResult = database.selectAllUsers()
 
-        # Per ogni risultato di tmpResult, creare un thread
+        # for each tmpResult, create a thread
         threads = [Thread(target=self.worker) for _ in range(NUM_WORKERS)]
 
-        # Add the websites to the task queue
+        # Add the user to the task queue
         [task_queue.put(user["UserInfo"]["Username"]) for user in tmpResult]
 
         # Start all the workers
@@ -164,11 +165,11 @@ class Requests:
         task_queue.join()
 
         # If userList is not empty
-        if json_util.dumps(listina):
+        if json_util.dumps(userList):
             response.setResponse("response", True)
 
         # Set and return response
-        response.setResponse("UserList", json_util.dumps(listina))
+        response.setResponse("UserList", json_util.dumps(userList))
         return response
 
     def DevicesWithSlug(self, IMEI):
