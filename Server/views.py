@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 import requests
 
-
 @csrf_exempt
 def index(request):
     if request.method == "POST":
