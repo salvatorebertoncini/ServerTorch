@@ -28,6 +28,7 @@ class Requests:
         return self.req
 
     def getReq(self, r):
+        print r
         return r["r"]
 
     # methods

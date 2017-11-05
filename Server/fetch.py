@@ -51,15 +51,18 @@ def getAndroidVersion(device):
     regex = r":(\d.*?)/"
     test_str = device["BuildInfo"]["Fingerprint"]
 
-    matches = re.finditer(regex, test_str)
+    version = re.findall(regex, test_str)
 
-    for matchNum, match in enumerate(matches):
-        matchNum = matchNum + 1
+    getAndroidVersionWithoutRegex(device["BuildInfo"]["Fingerprint"])
 
-        for groupNum in range(0, len(match.groups())):
-            groupNum = groupNum + 1
+    return version.pop()
 
-            return match.group(groupNum)
+
+def getAndroidVersionWithoutRegex(device):
+    array_split = device.split("/")
+    dot_split = array_split[2].split(":")
+    print dot_split[1]
+
 
 
 def processDevicesList(allResult, devicesList):
